@@ -1,0 +1,36 @@
+import requests
+
+def get_weather_data(city):
+    api_key = "b1b15e88fa797225412429c1c50c122a1"
+    base_url = "http://api.openweathermap.org/data/2.5/weather"
+    complete_url = f"{base_url}?q={city}&appid={api_key}&units=metric"
+    
+    response = requests.get(complete_url)
+    return response.json()
+
+def display_weather(data):
+    if data.get("cod") != "404":
+        main = data.get("main")
+        weather = data.get("weather")[0] if data.get("weather") else None
+        
+        if main and weather:
+            temperature = main.get("temp")
+            humidity = main.get("humidity")
+            description = weather.get("description")
+            
+            print(f"Temperature: {temperature}°C")
+            print(f"Humidity: {humidity}%")
+            print(f"Weather Description: {description.capitalize()}")
+        else:
+            print("Error: Incomplete weather data received.")
+    else:
+        print("City not found. Please enter a valid city name.")
+
+def main():
+    city = input("Enter city name: ")
+    weather_data = get_weather_data(city)
+    display_weather(weather_data)
+
+# Example usage
+print("Welcome to the Basic Weather App!")
+main()
